@@ -46,6 +46,28 @@ class GameLogicService {
     ref.read(countdownVisibleProvider.notifier).show();
   }
 
+  // ── Whack mode ────────────────────────────────────────────────────────────
+
+  void startWhackMode({
+    required void Function() onTimeUp,
+  }) {
+    ref.read(gameScoreProvider.notifier).resetGameScore();
+    ref.read(gameTimerProvider.notifier).reset();
+    ref.read(gameInProgressProvider.notifier).setGameInProgress(true);
+
+    ref.read(monsterWhackamoleServiceProvider).startSpawning();
+
+    _startGameTimer(onTimeUp: onTimeUp);
+  }
+
+  void stopWhackMode() {
+    _cancelGameTimer();
+    ref.read(monsterWhackamoleServiceProvider).stopSpawning();
+    ref.read(gameInProgressProvider.notifier).setGameInProgress(false);
+    // Reset countdown overlay for next session.
+    ref.read(countdownVisibleProvider.notifier).show();
+  }
+
   // ── Game timer ────────────────────────────────────────────────────────────
 
   void _startGameTimer({required void Function() onTimeUp}) {
@@ -57,6 +79,7 @@ class GameLogicService {
         ref.read(gameTimerProvider.notifier).tick();
         _cancelGameTimer();
         ref.read(monsterSpawningServiceProvider).stopSpawning();
+        ref.read(monsterWhackamoleServiceProvider).stopSpawning();
         ref.read(gameInProgressProvider.notifier).setGameInProgress(false);
         onTimeUp();
       } else {

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:monstershooting/helpers/enums.dart';
 import 'package:monstershooting/service/game_logic_service.dart';
 import 'package:monstershooting/service/monster_spawning_service.dart';
+import 'package:monstershooting/service/monster_whackamole_service.dart';
 
 // ---------------------------------------------------------------------------
 // Data models
@@ -191,3 +192,72 @@ class ActiveDeadMonsterNotifier extends Notifier<List<DeadMonsterEntry>> {
     state = [];
   }
 }
+
+// ---------------------------------------------------------------------------
+// Whack-a-Mole state
+// ---------------------------------------------------------------------------
+
+class MoleState {
+  final MonsterAnimations animation;
+  final int showSpeed;
+  final bool shoot;
+  final bool isVisible;
+
+  const MoleState({
+    required this.animation,
+    required this.showSpeed,
+    required this.shoot,
+    required this.isVisible,
+  });
+
+  MoleState copyWith({
+    MonsterAnimations? animation,
+    int? showSpeed,
+    bool? shoot,
+    bool? isVisible,
+  }) {
+    return MoleState(
+      animation: animation ?? this.animation,
+      showSpeed: showSpeed ?? this.showSpeed,
+      shoot: shoot ?? this.shoot,
+      isVisible: isVisible ?? this.isVisible,
+    );
+  }
+}
+
+final whackMolesProvider = NotifierProvider<WhackMolesNotifier, Map<int, MoleState>>(() => WhackMolesNotifier());
+
+class WhackMolesNotifier extends Notifier<Map<int, MoleState>> {
+  @override
+  Map<int, MoleState> build() {
+    return {
+      for (int i = 0; i < 7; i++)
+        i: const MoleState(
+          animation: MonsterAnimations.none,
+          showSpeed: 1,
+          shoot: false,
+          isVisible: false,
+        )
+    };
+  }
+
+  void updateMole(int index, MoleState state) {
+    this.state = {...this.state, index: state};
+  }
+
+  void resetMoles() {
+    state = {
+      for (int i = 0; i < 7; i++)
+        i: const MoleState(
+          animation: MonsterAnimations.none,
+          showSpeed: 1,
+          shoot: false,
+          isVisible: false,
+        )
+    };
+  }
+}
+
+final monsterWhackamoleServiceProvider = Provider<MonsterWhackamoleService>(
+  (ref) => MonsterWhackamoleService(ref),
+);

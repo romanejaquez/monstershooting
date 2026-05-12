@@ -58,29 +58,64 @@ class _WhackMonsterWidgetState extends State<WhackMonsterWidget> {
     _instance = _controller!.dataBind(DataBind.auto());
 
     _controller!.stateMachine.addEventListener((event) {
-      if (event.name == 'shot') {
-        widget.onShot();
-      } else if (event.name == 'reset') {
-        widget.onReset();
-      }
+      if (!mounted) return;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        if (event.name == 'shot') {
+          widget.onShot();
+        } else if (event.name == 'reset') {
+          widget.onReset();
+        }
+      });
     });
 
     setState(() {
       _isLoaded = true;
     });
+    // Trigger initial animation once loaded
+    _triggerAnimation(null);
+  }
+
+  void _triggerAnimation(WhackMonsterWidget? oldWidget) {
+    if (!_isLoaded || _instance == null) return;
+
+    // Set monster color
+    if (widget.monsterAnimation != MonsterAnimations.none) {
+      _instance!.enumerator('monster')!.value = widget.monsterAnimation.name;
+    }
+
+    if (oldWidget == null) {
+      // First load
+      if (!widget.shoot && widget.monsterAnimation != MonsterAnimations.none) {
+        _instance!.trigger('show${widget.showSpeed}')!.trigger();
+      } else if (widget.shoot) {
+        _instance!.trigger('shoot')!.trigger();
+      }
+    } else {
+      // Update
+      if (widget.monsterAnimation != MonsterAnimations.none &&
+          oldWidget.monsterAnimation == MonsterAnimations.none) {
+        // A new monster appeared
+        _instance!.trigger('show${widget.showSpeed}')!.trigger();
+      } else if (widget.shoot && !oldWidget.shoot) {
+        // The monster was shot
+        _instance!.trigger('shoot')!.trigger();
+      }
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant WhackMonsterWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.monsterAnimation != oldWidget.monsterAnimation ||
+        widget.shoot != oldWidget.shoot) {
+      _triggerAnimation(oldWidget);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoaded) {
-      _instance!.enumerator('monster')!.value = widget.monsterAnimation.name;
-
-      if (!widget.shoot) {
-        _instance!.trigger('show${widget.showSpeed}')!.trigger();
-      } else {
-        _instance!.trigger('shoot')!.trigger();
-      }
-    }
+    // Animation triggering is now handled in _triggerAnimation
 
     return _isLoaded
         ? SizedBox(

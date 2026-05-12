@@ -1,15 +1,59 @@
 import 'package:flutter/material.dart';
-import 'package:monstershooting/helpers/enums.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:monstershooting/helpers/constants.dart';
+import 'package:monstershooting/providers/game_providers.dart';
+import 'package:monstershooting/service/game_logic_service.dart';
 import 'package:monstershooting/widgets/whack_monster.dart';
 
-class GamePageWhackMode extends StatefulWidget {
+class GamePageWhackMode extends ConsumerStatefulWidget {
   const GamePageWhackMode({super.key});
 
   @override
-  _GamePageWhackModeState createState() => _GamePageWhackModeState();
+  GamePageWhackModeState createState() => GamePageWhackModeState();
 }
 
-class _GamePageWhackModeState extends State<GamePageWhackMode> {
+class GamePageWhackModeState extends ConsumerState<GamePageWhackMode> {
+  late final GameLogicService _gameLogicService;
+
+  @override
+  void initState() {
+    super.initState();
+    _gameLogicService = ref.read(gameLogicProvider);
+  }
+
+  @override
+  void dispose() {
+    _gameLogicService.stopWhackMode();
+    super.dispose();
+  }
+
+  Widget _buildMole(int index, Alignment alignment, Offset offset) {
+    final state = ref.watch(whackMolesProvider)[index]!;
+    
+    return Align(
+      alignment: alignment,
+      child: Transform.translate(
+        offset: offset,
+        child: GestureDetector(
+          onTap: () {
+            ref.read(monsterWhackamoleServiceProvider).onMoleTapped(index);
+          },
+          child: WhackMonsterWidget(
+            monsterAnimation: state.animation,
+            shoot: state.shoot,
+            showSpeed: state.showSpeed,
+            onReset: () {
+              ref.read(monsterWhackamoleServiceProvider).onMonsterMissed(index);
+            },
+            onShot: () {
+              ref.read(monsterWhackamoleServiceProvider).onShotAnimationFinished(index);
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -19,86 +63,13 @@ class _GamePageWhackModeState extends State<GamePageWhackMode> {
         child: Stack(
           clipBehavior: Clip.none,
           children: [
-            Align(
-              alignment: Alignment.topCenter,
-              child: Transform.translate(
-                offset: const Offset(0, -150),
-                child: WhackMonsterWidget(
-                  monsterAnimation: MonsterAnimations.blue,
-                  shoot: false,
-                  onReset: () => {},
-                  onShot: () => {},
-                ),
-              ),
-            ),
-
-            Align(
-              alignment: Alignment.topLeft,
-              child: WhackMonsterWidget(
-                monsterAnimation: MonsterAnimations.blue,
-                shoot: false,
-                onReset: () => {},
-                onShot: () => {},
-              ),
-            ),
-            Align(
-              alignment: Alignment.topRight,
-              child: WhackMonsterWidget(
-                monsterAnimation: MonsterAnimations.orange,
-                shoot: false,
-                onReset: () => {},
-                onShot: () => {},
-              ),
-            ),
-
-            Align(
-              alignment: Alignment.center,
-              child: Transform.translate(
-                offset: const Offset(0, -75),
-                child: WhackMonsterWidget(
-                  monsterAnimation: MonsterAnimations.purple,
-                  shoot: false,
-                  onReset: () => {},
-                  onShot: () => {},
-                ),
-              ),
-            ),
-
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: WhackMonsterWidget(
-                monsterAnimation: MonsterAnimations.purple,
-                shoot: false,
-                onReset: () => {},
-                onShot: () => {},
-              ),
-            ),
-
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: Transform.translate(
-                offset: const Offset(0, -150),
-                child: WhackMonsterWidget(
-                  monsterAnimation: MonsterAnimations.red,
-                  shoot: false,
-                  onReset: () => {},
-                  onShot: () => {},
-                ),
-              ),
-            ),
-
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Transform.translate(
-                offset: const Offset(0, -150),
-                child: WhackMonsterWidget(
-                  monsterAnimation: MonsterAnimations.green,
-                  shoot: false,
-                  onReset: () => {},
-                  onShot: () => {},
-                ),
-              ),
-            ),
+            _buildMole(0, Alignment.topCenter, const Offset(0, -150)),
+            _buildMole(1, Alignment.topLeft, Offset.zero),
+            _buildMole(2, Alignment.topRight, Offset.zero),
+            _buildMole(3, Alignment.center, const Offset(0, -75)),
+            _buildMole(4, Alignment.bottomCenter, Offset.zero),
+            _buildMole(5, Alignment.bottomLeft, const Offset(0, -150)),
+            _buildMole(6, Alignment.bottomRight, const Offset(0, -150)),
           ],
         ),
       ),

@@ -14,6 +14,7 @@ class FinalScorePage extends ConsumerStatefulWidget {
 
 class FinalScorePageState extends ConsumerState<FinalScorePage> {
   void onRestart() {
+    ref.read(gameScoreProvider.notifier).resetGameScore();
     Navigator.of(
       context,
     ).popUntil((route) => route.settings.name == HomePage.route);

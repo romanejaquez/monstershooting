@@ -49,6 +49,12 @@ class GamePageState extends ConsumerState<GamePage> {
             screenHeight: size.height,
             onTimeUp: _onTimeUp,
           );
+    } else if (gameMode == GameMode.whack) {
+      ref
+          .read(gameLogicProvider)
+          .startWhackMode(
+            onTimeUp: _onTimeUp,
+          );
     }
   }
 
