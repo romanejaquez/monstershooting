@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:monstershooting/pages/home_page.dart';
+import 'package:monstershooting/providers/game_providers.dart';
 import 'package:monstershooting/widgets/final_score_page_widget.dart';
 
-class FinalScorePage extends StatefulWidget {
+class FinalScorePage extends ConsumerStatefulWidget {
   static const String route = '/final-score';
   const FinalScorePage({super.key});
 
   @override
-  _FinalScorePageState createState() => _FinalScorePageState();
+  ConsumerState<FinalScorePage> createState() => FinalScorePageState();
 }
 
-class _FinalScorePageState extends State<FinalScorePage> {
+class FinalScorePageState extends ConsumerState<FinalScorePage> {
   void onRestart() {
     Navigator.of(
       context,
@@ -19,6 +21,9 @@ class _FinalScorePageState extends State<FinalScorePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: FinalScorePageWidget(onRestart: onRestart));
+    final score = ref.watch(gameScoreProvider);
+    return Scaffold(
+      body: FinalScorePageWidget(onRestart: onRestart, score: score),
+    );
   }
 }

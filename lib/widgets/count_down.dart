@@ -53,7 +53,7 @@ class CountDownWidgetState extends ConsumerState<CountDownWidget> {
   @override
   Widget build(BuildContext context) {
     return _isLoaded
-        ? RiveWidget(fit: Fit.cover, controller: _controller!)
+        ? RiveWidget(fit: Fit.contain, controller: _controller!)
         : const SizedBox.shrink();
   }
 }

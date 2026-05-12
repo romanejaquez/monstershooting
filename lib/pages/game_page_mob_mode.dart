@@ -15,15 +15,8 @@ class GamePageMobModeState extends ConsumerState<GamePageMobMode> {
   @override
   void initState() {
     super.initState();
-    // Defer until the first frame so MediaQuery has a valid size.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      final size = MediaQuery.sizeOf(context);
-      ref.read(gameLogicProvider).startMobMode(
-        screenWidth: size.width,
-        screenHeight: size.height,
-      );
-    });
+    // Do not start spawning here anymore. We wait for GamePage to call startMobMode
+    // after the countdown widget finishes its animation.
   }
 
   @override

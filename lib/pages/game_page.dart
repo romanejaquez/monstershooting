@@ -5,68 +5,115 @@ import 'package:monstershooting/pages/final_score_page.dart';
 import 'package:monstershooting/pages/game_page_mob_mode.dart';
 import 'package:monstershooting/pages/game_page_whack_mode.dart';
 import 'package:monstershooting/providers/game_providers.dart';
+import 'package:monstershooting/widgets/count_down.dart';
 import 'package:monstershooting/widgets/monster_anim.dart';
+import 'package:monstershooting/widgets/monster_timer.dart';
 import 'package:monstershooting/widgets/score_board_wrapper.dart';
 import 'package:monstershooting/widgets/shooting_banner.dart';
 import 'package:rive/rive.dart';
 
-class GamePage extends StatefulWidget {
+class GamePage extends ConsumerStatefulWidget {
   static const String route = '/game';
   const GamePage({super.key});
 
   @override
-  State<GamePage> createState() => GamePageState();
+  ConsumerState<GamePage> createState() => GamePageState();
 }
 
-class GamePageState extends State<GamePage> {
+class GamePageState extends ConsumerState<GamePage> {
+  @override
+  void initState() {
+    super.initState();
+    // Ensure the countdown is visible whenever we enter this page.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        ref.read(countdownVisibleProvider.notifier).show();
+      }
+    });
+  }
+
+  /// Called by [CountDownWidget] when its Rive "onEnd" event fires.
+  void _onCountdownEnd() {
+    // Hide the countdown overlay.
+    ref.read(countdownVisibleProvider.notifier).hide();
+
+    // Start the game logic now that the countdown has finished
+    final gameMode = ref.read(selectedGameModeProvider);
+    final size = MediaQuery.sizeOf(context);
+
+    if (gameMode == GameMode.mob) {
+      ref
+          .read(gameLogicProvider)
+          .startMobMode(
+            screenWidth: size.width,
+            screenHeight: size.height,
+            onTimeUp: _onTimeUp,
+          );
+    }
+  }
+
+  /// Navigated to by [GameLogicService] when the 60-second timer hits zero.
+  void _onTimeUp() {
+    if (!mounted) return;
+    Navigator.of(context).pushReplacementNamed(FinalScorePage.route);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final countdownVisible = ref.watch(countdownVisibleProvider);
+    final gameMode = ref.watch(selectedGameModeProvider);
+    final size = MediaQuery.sizeOf(context);
+
     return Scaffold(
       body: Stack(
         children: [
+          // ── Background animation ──────────────────────────────────────────
           MonsterAnimWidget(
             monsterAnimation: MonsterAnimations.monsterbg,
             fit: Fit.cover,
           ),
 
+          // ── Game mode surface (mob / whack) ───────────────────────────────
+          switch (gameMode) {
+            GameMode.mob => const GamePageMobMode(),
+            GameMode.whack => const GamePageWhackMode(),
+            _ => const SizedBox.shrink(),
+          },
+
+          // ── HUD: Score board (top-right) ──────────────────────────────────
           GestureDetector(
-            onTap: () {
-              Navigator.of(context).pop();
-            },
+            onTap: () => Navigator.of(context).pop(),
             child: Align(
               alignment: Alignment.topRight,
               child: ScoreBoardWrapper(),
             ),
           ),
 
-          Consumer(
-            builder: (context, ref, _) {
-              final gameMode = ref.watch(selectedGameModeProvider);
-
-              Widget gameWidget = switch (gameMode) {
-                GameMode.mob => const GamePageMobMode(),
-                GameMode.whack => const GamePageWhackMode(),
-                _ => const SizedBox.shrink(),
-              };
-
-              return gameWidget;
-            },
-          ),
-
-          //GamePageWhackMode(),
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).pushNamed(FinalScorePage.route);
-            },
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: SizedBox(
-                width: 350,
-                height: 200,
-                child: ShootingBannerWidget(anim: MonsterAnimations.red),
-              ),
+          // ── HUD: Banner + Timer (top-left) ────────────────────────────────
+          Align(
+            alignment: Alignment.topLeft,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  width: 350,
+                  height: 200,
+                  child: ShootingBannerWidget(anim: MonsterAnimations.red),
+                ),
+                const MonsterTimer(),
+              ],
             ),
           ),
+
+          // ── Countdown overlay (hidden after animation ends) ───────────────
+          if (countdownVisible)
+            Center(
+              child: SizedBox(
+                width: size.width * .8,
+                height: size.height * .8,
+                child: CountDownWidget(onEnd: _onCountdownEnd),
+              ),
+            ),
         ],
       ),
     );

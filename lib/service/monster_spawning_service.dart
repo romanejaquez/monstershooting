@@ -223,7 +223,7 @@ class MonsterSpawningService {
         .read(activeDeadMonsterProvider.notifier)
         .addDead(DeadMonsterEntry(id: deadId, position: tapPosition));
 
-    Timer(const Duration(seconds: 1), () {
+    Timer(const Duration(milliseconds: 1500), () {
       ref.read(activeDeadMonsterProvider.notifier).removeDead(deadId);
     });
   }

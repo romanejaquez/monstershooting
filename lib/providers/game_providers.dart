@@ -99,6 +99,46 @@ class GameScoreNotifier extends Notifier<double> {
 }
 
 // ---------------------------------------------------------------------------
+// Game timer (counts down from 60 seconds)
+// ---------------------------------------------------------------------------
+
+const int kGameDurationSeconds = 60;
+
+final gameTimerProvider = NotifierProvider<GameTimerNotifier, int>(
+  () => GameTimerNotifier(),
+);
+
+class GameTimerNotifier extends Notifier<int> {
+  @override
+  int build() => kGameDurationSeconds;
+
+  void tick() {
+    if (state > 0) state = state - 1;
+  }
+
+  void reset() {
+    state = kGameDurationSeconds;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Countdown overlay visibility
+// ---------------------------------------------------------------------------
+
+final countdownVisibleProvider =
+    NotifierProvider<CountdownVisibleNotifier, bool>(
+      () => CountdownVisibleNotifier(),
+    );
+
+class CountdownVisibleNotifier extends Notifier<bool> {
+  @override
+  bool build() => true; // visible by default when game page opens
+
+  void hide() => state = false;
+  void show() => state = true;
+}
+
+// ---------------------------------------------------------------------------
 // Active-monster list (mob surface)
 // ---------------------------------------------------------------------------
 

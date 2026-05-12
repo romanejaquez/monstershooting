@@ -5,7 +5,12 @@ import 'package:rive/rive.dart';
 
 class FinalScorePageWidget extends ConsumerStatefulWidget {
   final Function onRestart;
-  const FinalScorePageWidget({super.key, required this.onRestart});
+  final double score;
+  const FinalScorePageWidget({
+    super.key,
+    required this.onRestart,
+    required this.score,
+  });
 
   @override
   ConsumerState<FinalScorePageWidget> createState() =>
@@ -53,6 +58,10 @@ class FinalScorePageWidgetState extends ConsumerState<FinalScorePageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoaded) {
+      _instance!.string("score")!.value = widget.score.toInt().toString();
+    }
+
     return _isLoaded
         ? RiveWidget(fit: Fit.cover, controller: _controller!)
         : const SizedBox.shrink();
