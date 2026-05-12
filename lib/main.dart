@@ -5,6 +5,7 @@ import 'package:monstershooting/pages/game_page.dart';
 import 'package:monstershooting/pages/home_page.dart';
 import 'package:monstershooting/pages/select_game_mode_page.dart';
 import 'package:monstershooting/pages/splash_page.dart';
+import 'package:monstershooting/widgets/global_crosshair_wrapper.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -21,8 +22,11 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         fontFamily: "Comic Kings",
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
+      builder: (context, child) {
+        return GlobalCrosshairWrapper(child: child!);
+      },
       initialRoute: SplashPage.route,
       routes: {
         SplashPage.route: (context) => const SplashPage(),
