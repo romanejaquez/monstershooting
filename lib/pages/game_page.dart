@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:monstershooting/pages/final_score_page.dart';
-import 'package:monstershooting/pages/game_page_whack_mode.dart';
+import 'package:monstershooting/pages/game_page_mob_mode.dart';
 import 'package:monstershooting/widgets/monster_anim.dart';
 import 'package:monstershooting/widgets/score_board.dart';
 import 'package:monstershooting/widgets/shooting_banner.dart';
@@ -25,9 +25,9 @@ class _GamePageState extends State<GamePage> {
             fit: Fit.cover,
           ),
 
-          //GamePageMobMode(),
-          GamePageWhackMode(),
+          GamePageMobMode(),
 
+          //GamePageWhackMode(),
           GestureDetector(
             onTap: () {
               Navigator.of(context).pushNamed(FinalScorePage.route);
