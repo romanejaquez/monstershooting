@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:monstershooting/pages/final_score_page.dart';
 import 'package:monstershooting/pages/game_page.dart';
 import 'package:monstershooting/pages/home_page.dart';
 import 'package:monstershooting/pages/select_game_mode_page.dart';
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
         HomePage.route: (context) => const HomePage(),
         SelectGameModePage.route: (context) => const SelectGameModePage(),
         GamePage.route: (context) => const GamePage(),
+        FinalScorePage.route: (context) => const FinalScorePage(),
       },
     );
   }

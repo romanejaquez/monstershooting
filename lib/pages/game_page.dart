@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:monstershooting/pages/final_score_page.dart';
 import 'package:monstershooting/widgets/monster_anim.dart';
 import 'package:monstershooting/widgets/monster_dead.dart';
 import 'package:monstershooting/widgets/monster_widget.dart';
@@ -50,12 +51,17 @@ class _GamePageState extends State<GamePage> {
             ),
           ),
 
-          Align(
-            alignment: Alignment.topLeft,
-            child: SizedBox(
-              width: 350,
-              height: 200,
-              child: ShootingBannerWidget(anim: MonsterAnimations.red),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushNamed(FinalScorePage.route);
+            },
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: 350,
+                height: 200,
+                child: ShootingBannerWidget(anim: MonsterAnimations.red),
+              ),
             ),
           ),
 
