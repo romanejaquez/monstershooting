@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:monstershooting/widgets/monster_anim.dart';
+import 'package:monstershooting/helpers/enums.dart';
 import 'package:monstershooting/widgets/whack_monster.dart';
 
 class GamePageWhackMode extends StatefulWidget {

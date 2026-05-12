@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:monstershooting/widgets/monster_anim.dart';
+import 'package:monstershooting/helpers/enums.dart';
 import 'package:rive/rive.dart';
 
 class ShootingBannerWidget extends ConsumerStatefulWidget {

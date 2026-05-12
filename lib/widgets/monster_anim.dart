@@ -1,18 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:monstershooting/helpers/enums.dart';
 import 'package:rive/rive.dart';
-
-enum MonsterAnimations {
-  none,
-  monsterbg,
-  purple,
-  red,
-  orange,
-  green,
-  blue,
-  countdown,
-  monsterdead,
-}
 
 class MonsterAnimWidget extends StatefulWidget {
   final Size? size;

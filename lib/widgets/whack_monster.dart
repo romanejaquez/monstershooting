@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:monstershooting/helpers/constants.dart';
-import 'package:monstershooting/widgets/monster_anim.dart';
+import 'package:monstershooting/helpers/enums.dart';
 import 'package:rive/rive.dart';
 
 class WhackMonsterWidget extends StatefulWidget {

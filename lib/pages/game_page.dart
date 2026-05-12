@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:monstershooting/helpers/enums.dart';
 import 'package:monstershooting/pages/final_score_page.dart';
 import 'package:monstershooting/pages/game_page_mob_mode.dart';
 import 'package:monstershooting/widgets/monster_anim.dart';
@@ -11,10 +12,10 @@ class GamePage extends StatefulWidget {
   const GamePage({super.key});
 
   @override
-  _GamePageState createState() => _GamePageState();
+  State<GamePage> createState() => GamePageState();
 }
 
-class _GamePageState extends State<GamePage> {
+class GamePageState extends State<GamePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
