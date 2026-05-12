@@ -1,17 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:monstershooting/providers/game_providers.dart';
 import 'package:monstershooting/widgets/monster_dead_surface.dart';
 import 'package:monstershooting/widgets/monster_mob_surface.dart';
 
-class GamePageMobMode extends StatefulWidget {
+class GamePageMobMode extends ConsumerStatefulWidget {
   const GamePageMobMode({super.key});
 
   @override
-  State<GamePageMobMode> createState() => GamePageMobModeState();
+  ConsumerState<GamePageMobMode> createState() => GamePageMobModeState();
 }
 
-class GamePageMobModeState extends State<GamePageMobMode> {
+class GamePageMobModeState extends ConsumerState<GamePageMobMode> {
+  @override
+  void initState() {
+    super.initState();
+    // Defer until the first frame so MediaQuery has a valid size.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final size = MediaQuery.sizeOf(context);
+      ref.read(gameLogicProvider).startMobMode(
+        screenWidth: size.width,
+        screenHeight: size.height,
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    ref.read(gameLogicProvider).stopMobMode();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [MonsterDeadSurface(), MonsterMobSurface()]);
+    return const Stack(
+      children: [
+        MonsterDeadSurface(),
+        MonsterMobSurface(),
+      ],
+    );
   }
 }

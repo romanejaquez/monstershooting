@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:monstershooting/pages/final_score_page.dart';
 import 'package:monstershooting/pages/game_page.dart';
 import 'package:monstershooting/pages/home_page.dart';
@@ -6,7 +7,7 @@ import 'package:monstershooting/pages/select_game_mode_page.dart';
 import 'package:monstershooting/pages/splash_page.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
