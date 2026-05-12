@@ -63,10 +63,9 @@ final monsterSpawningServiceProvider = Provider<MonsterSpawningService>(
   (ref) => MonsterSpawningService(ref),
 );
 
-final gameInProgressProvider =
-    NotifierProvider<GameInProgressNotifier, bool>(
-      () => GameInProgressNotifier(),
-    );
+final gameInProgressProvider = NotifierProvider<GameInProgressNotifier, bool>(
+  () => GameInProgressNotifier(),
+);
 
 class GameInProgressNotifier extends Notifier<bool> {
   @override
