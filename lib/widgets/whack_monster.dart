@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:monstershooting/helpers/constants.dart';
 import 'package:monstershooting/widgets/monster_anim.dart';
 import 'package:rive/rive.dart';
 
@@ -82,13 +83,11 @@ class _WhackMonsterWidgetState extends State<WhackMonsterWidget> {
     }
 
     return _isLoaded
-        ? widget.size == null
-              ? RiveWidget(fit: widget.fit, controller: _controller!)
-              : SizedBox(
-                  width: widget.size?.width,
-                  height: widget.size?.height,
-                  child: RiveWidget(fit: widget.fit, controller: _controller!),
-                )
+        ? SizedBox(
+            width: Constants.monsterWidth,
+            height: Constants.monsterHeight,
+            child: RiveWidget(fit: widget.fit, controller: _controller!),
+          )
         : const SizedBox.shrink();
   }
 }
