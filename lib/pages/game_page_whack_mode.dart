@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:monstershooting/helpers/constants.dart';
 import 'package:monstershooting/providers/game_providers.dart';
 import 'package:monstershooting/service/game_logic_service.dart';
 import 'package:monstershooting/widgets/whack_monster.dart';
@@ -29,7 +28,7 @@ class GamePageWhackModeState extends ConsumerState<GamePageWhackMode> {
 
   Widget _buildMole(int index, Alignment alignment, Offset offset) {
     final state = ref.watch(whackMolesProvider)[index]!;
-    
+
     return Align(
       alignment: alignment,
       child: Transform.translate(
@@ -46,7 +45,9 @@ class GamePageWhackModeState extends ConsumerState<GamePageWhackMode> {
               ref.read(monsterWhackamoleServiceProvider).onMonsterMissed(index);
             },
             onShot: () {
-              ref.read(monsterWhackamoleServiceProvider).onShotAnimationFinished(index);
+              ref
+                  .read(monsterWhackamoleServiceProvider)
+                  .onShotAnimationFinished(index);
             },
           ),
         ),
