@@ -10,7 +10,7 @@ class ScoreBoardWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 350,
-      height: 200,
+      height: 120,
       child: Consumer(
         builder: (context, ref, child) {
           double score = ref.watch(gameScoreProvider);

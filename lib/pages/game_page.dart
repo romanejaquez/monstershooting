@@ -50,11 +50,7 @@ class GamePageState extends ConsumerState<GamePage> {
             onTimeUp: _onTimeUp,
           );
     } else if (gameMode == GameMode.whack) {
-      ref
-          .read(gameLogicProvider)
-          .startWhackMode(
-            onTimeUp: _onTimeUp,
-          );
+      ref.read(gameLogicProvider).startWhackMode(onTimeUp: _onTimeUp);
     }
   }
 
@@ -100,13 +96,27 @@ class GamePageState extends ConsumerState<GamePage> {
             alignment: Alignment.topLeft,
             child: Column(
               mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  width: 350,
-                  height: 200,
-                  child: ShootingBannerWidget(anim: MonsterAnimations.red),
-                ),
                 const MonsterTimer(),
+
+                Consumer(
+                  builder: (context, ref, child) {
+                    final gameMode = ref.read(selectedGameModeProvider);
+
+                    if (gameMode == GameMode.mob) {
+                      return SizedBox(
+                        width: 350,
+                        height: 180,
+                        child: ShootingBannerWidget(
+                          anim: MonsterAnimations.red,
+                        ),
+                      );
+                    }
+
+                    return const SizedBox.shrink();
+                  },
+                ),
               ],
             ),
           ),

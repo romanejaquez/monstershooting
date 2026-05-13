@@ -16,32 +16,37 @@ class MonsterTimer extends ConsumerWidget {
     final seconds = ref.watch(gameTimerProvider);
     final label = _format(seconds);
 
-    return Stack(
-      children: [
-        // Shadow layer
-        Transform.translate(
-          offset: const Offset(0, 10),
-          child: Container(
-            margin: const EdgeInsets.only(left: 32),
+    return Container(
+      margin: const EdgeInsets.only(top: 16, left: 16),
+
+      child: Stack(
+        children: [
+          // Shadow layer
+          Transform.translate(
+            offset: const Offset(0, 10),
+            child: Container(
+              constraints: BoxConstraints(minWidth: 240, maxWidth: 240),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.black.withValues(alpha: .25),
+                borderRadius: BorderRadius.circular(32),
+              ),
+              child: _timerRow(label, Colors.black),
+            ),
+          ),
+          // Foreground layer
+          Container(
+            alignment: Alignment.center,
+            constraints: BoxConstraints(minWidth: 240, maxWidth: 240),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: .25),
+              color: const Color(0xFFD0FF00),
               borderRadius: BorderRadius.circular(32),
             ),
             child: _timerRow(label, Colors.black),
           ),
-        ),
-        // Foreground layer
-        Container(
-          margin: const EdgeInsets.only(left: 32),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          decoration: BoxDecoration(
-            color: const Color(0xFFD0FF00),
-            borderRadius: BorderRadius.circular(32),
-          ),
-          child: _timerRow(label, Colors.black),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -51,12 +56,15 @@ class MonsterTimer extends ConsumerWidget {
       children: [
         Icon(Icons.timer, size: 42, color: color),
         const SizedBox(width: 8),
-        Text(
-          label,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: color,
-            fontSize: 40,
+        Expanded(
+          child: Text(
+            label,
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: color,
+              fontSize: 40,
+            ),
           ),
         ),
         const SizedBox(width: 8),

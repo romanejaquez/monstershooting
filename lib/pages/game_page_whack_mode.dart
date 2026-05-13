@@ -22,7 +22,9 @@ class GamePageWhackModeState extends ConsumerState<GamePageWhackMode> {
 
   @override
   void dispose() {
-    _gameLogicService.stopWhackMode();
+    Future.microtask(() {
+      _gameLogicService.stopWhackMode();
+    });
     super.dispose();
   }
 

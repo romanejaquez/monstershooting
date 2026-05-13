@@ -25,7 +25,9 @@ class GamePageMobModeState extends ConsumerState<GamePageMobMode> {
 
   @override
   void dispose() {
-    _gameLogicService.stopMobMode();
+    Future.microtask(() {
+      _gameLogicService.stopMobMode();
+    });
     super.dispose();
   }
 
