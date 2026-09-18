@@ -34,6 +34,7 @@ class MonsterWidgetState extends State<MonsterWidget> {
         widget.onTapped?.call(details.globalPosition);
       },
       child: MonsterAnimWidget(
+        key: ValueKey(widget.monsterAnimation),
         size: Size(Constants.monsterWidth, Constants.monsterHeight),
         monsterAnimation: widget.monsterAnimation,
       ),

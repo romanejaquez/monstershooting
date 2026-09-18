@@ -5,12 +5,18 @@ import 'package:monstershooting/providers/audio_providers.dart';
 
 void main() {
   group('GameSounds Enum Tests', () {
-    test('GameSounds enum contains gamebgmusic and lasershot with correct paths', () {
+    test('GameSounds enum contains all sounds with correct paths', () {
       expect(GameSounds.gamebgmusic.name, 'gamebgmusic');
       expect(GameSounds.gamebgmusic.path, 'assets/sounds/gamebgmusic.mp3');
 
       expect(GameSounds.lasershot.name, 'lasershot');
       expect(GameSounds.lasershot.path, 'assets/sounds/lasershot.mp3');
+
+      expect(GameSounds.dudshot.name, 'dudshot');
+      expect(GameSounds.dudshot.path, 'assets/sounds/dudshot.mp3');
+
+      expect(GameSounds.boo.name, 'boo');
+      expect(GameSounds.boo.path, 'assets/sounds/boo.mp3');
     });
   });
 
@@ -68,10 +74,12 @@ void main() {
       expect(preloadService.isAllPreloaded(), false);
 
       final notifier = container.read(soundStateProvider.notifier);
-      notifier.markSoundLoaded(GameSounds.gamebgmusic);
-      expect(preloadService.isAllPreloaded(), false);
+      for (int i = 0; i < GameSounds.values.length - 1; i++) {
+        notifier.markSoundLoaded(GameSounds.values[i]);
+        expect(preloadService.isAllPreloaded(), false);
+      }
 
-      notifier.markSoundLoaded(GameSounds.lasershot);
+      notifier.markSoundLoaded(GameSounds.values.last);
       expect(preloadService.isAllPreloaded(), true);
     });
 

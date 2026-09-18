@@ -214,18 +214,40 @@ class MonsterSpawningService {
 
   void onMonsterTapped(String id, double lane, Offset tapPosition) {
     if (!_isRunning) return;
-    _removeMonster(id, lane);
 
-    ref.read(gameScoreProvider.notifier).addGameScore(100);
+    final monsters = ref.read(activeMonsterProvider);
+    final monsterIndex = monsters.indexWhere((m) => m.id == id);
+    if (monsterIndex == -1) return;
+    final monster = monsters[monsterIndex];
 
-    final deadId = 'dead_${_idCounter++}';
-    ref
-        .read(activeDeadMonsterProvider.notifier)
-        .addDead(DeadMonsterEntry(id: deadId, position: tapPosition));
+    // 1. If it's already a ghost, shooting does nothing
+    if (monster.animation == MonsterAnimations.mainghost) {
+      return;
+    }
 
-    Timer(const Duration(milliseconds: 1500), () {
-      ref.read(activeDeadMonsterProvider.notifier).removeDead(deadId);
-    });
+    final currentTarget = ref.read(currentTargetMonsterProvider);
+
+    // 2. Matching target monster shot: kill and score
+    if (monster.animation == currentTarget) {
+      _removeMonster(id, lane);
+
+      ref.read(gameScoreProvider.notifier).addGameScore(100);
+
+      final deadId = 'dead_${_idCounter++}';
+      ref
+          .read(activeDeadMonsterProvider.notifier)
+          .addDead(DeadMonsterEntry(id: deadId, position: tapPosition));
+
+      Timer(const Duration(milliseconds: 1500), () {
+        ref.read(activeDeadMonsterProvider.notifier).removeDead(deadId);
+      });
+    } else {
+      // 3. Wrong target shot: play dudshot & boo, don't remove, no score, morph into mainghost
+      ref.read(gameAudioServiceProvider).playWrongTargetShot();
+      ref
+          .read(activeMonsterProvider.notifier)
+          .updateMonsterAnimation(id, MonsterAnimations.mainghost);
+    }
   }
 }
 

@@ -141,6 +141,28 @@ class CountdownVisibleNotifier extends Notifier<bool> {
 }
 
 // ---------------------------------------------------------------------------
+// Current target monster (shown in shooting banner)
+// ---------------------------------------------------------------------------
+
+final currentTargetMonsterProvider =
+    NotifierProvider<CurrentTargetMonsterNotifier, MonsterAnimations>(
+      () => CurrentTargetMonsterNotifier(),
+    );
+
+class CurrentTargetMonsterNotifier extends Notifier<MonsterAnimations> {
+  @override
+  MonsterAnimations build() => MonsterAnimations.none;
+
+  void setTarget(MonsterAnimations target) {
+    state = target;
+  }
+
+  void reset() {
+    state = MonsterAnimations.none;
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Active-monster list (mob surface)
 // ---------------------------------------------------------------------------
 
@@ -162,6 +184,21 @@ class ActiveMonsterNotifier extends Notifier<List<MonsterEntry>> {
 
   void removeMonster(String id) {
     state = state.where((m) => m.id != id).toList();
+  }
+
+  void updateMonsterAnimation(String id, MonsterAnimations newAnimation) {
+    state = [
+      for (final m in state)
+        if (m.id == id)
+          MonsterEntry(
+            id: m.id,
+            animation: newAnimation,
+            left: m.left,
+            speed: m.speed,
+          )
+        else
+          m,
+    ];
   }
 
   void clear() {

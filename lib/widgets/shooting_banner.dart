@@ -41,17 +41,31 @@ class ShootingBannerWidgetState extends ConsumerState<ShootingBannerWidget> {
 
     _instance = _controller!.dataBind(DataBind.auto());
 
+    if (!mounted) return;
     setState(() {
       _isLoaded = true;
     });
+
+    _triggerAnimation(null);
+  }
+
+  void _triggerAnimation(MonsterAnimations? oldAnim) {
+    if (!_isLoaded || _instance == null) return;
+    if (widget.anim != MonsterAnimations.none) {
+      _instance?.trigger(widget.anim.name)?.trigger();
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant ShootingBannerWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.anim != oldWidget.anim) {
+      _triggerAnimation(oldWidget.anim);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoaded) {
-      _instance!.trigger(widget.anim.name)!.trigger();
-    }
-
     return _isLoaded
         ? RiveWidget(fit: Fit.contain, controller: _controller!)
         : const SizedBox.shrink();

@@ -95,6 +95,12 @@ class GameAudioService {
     );
   }
 
+  /// Plays the dudshot and boo sounds concurrently when shooting an incorrect target.
+  Future<void> playWrongTargetShot() async {
+    playSound(GameSounds.dudshot, volume: 0.9);
+    playSound(GameSounds.boo, volume: 0.8);
+  }
+
   /// Disposes of any active handles.
   Future<void> dispose() async {
     await stopBgMusic();

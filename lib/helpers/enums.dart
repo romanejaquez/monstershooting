@@ -15,7 +15,9 @@ enum MonsterAnimations {
 
 enum GameSounds {
   gamebgmusic('assets/sounds/gamebgmusic.mp3'),
-  lasershot('assets/sounds/lasershot.mp3');
+  lasershot('assets/sounds/lasershot.mp3'),
+  dudshot('assets/sounds/dudshot.mp3'),
+  boo('assets/sounds/boo.mp3');
 
   final String path;
   const GameSounds(this.path);

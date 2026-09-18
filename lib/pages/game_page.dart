@@ -105,14 +105,16 @@ class GamePageState extends ConsumerState<GamePage> {
 
                 Consumer(
                   builder: (context, ref, child) {
-                    final gameMode = ref.read(selectedGameModeProvider);
+                    final gameMode = ref.watch(selectedGameModeProvider);
+                    final currentTarget =
+                        ref.watch(currentTargetMonsterProvider);
 
                     if (gameMode == GameMode.mob) {
                       return SizedBox(
                         width: 350,
                         height: 180,
                         child: ShootingBannerWidget(
-                          anim: MonsterAnimations.red,
+                          anim: currentTarget,
                         ),
                       );
                     }
