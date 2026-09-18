@@ -2,17 +2,19 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:monstershooting/providers/audio_providers.dart';
 import 'package:monstershooting/widgets/duupr_games_logo.dart';
 
-class SplashPage extends StatefulWidget {
+class SplashPage extends ConsumerStatefulWidget {
   static const String route = '/splash';
   const SplashPage({super.key});
 
   @override
-  State<SplashPage> createState() => _SplashPageState();
+  ConsumerState<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage> {
+class _SplashPageState extends ConsumerState<SplashPage> {
   bool isCoreLogoLoaded = false;
   Timer splashPageTimer = Timer(0.seconds, () {});
 
@@ -23,8 +25,16 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   Future<void> preloadFile() async {
+    // Start playing background music immediately from the launch screen
+    ref.read(gameAudioServiceProvider).playBgMusic();
+
+    // Preload all game sound assets upfront
+    ref.read(soundPreloadServiceProvider).preloadSounds();
+
     splashPageTimer = Timer(4.seconds, () {
-      Navigator.pushNamed(context, '/home');
+      if (mounted) {
+        Navigator.pushNamed(context, '/home');
+      }
     });
   }
 

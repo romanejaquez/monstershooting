@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:monstershooting/providers/audio_providers.dart';
 
-class GlobalCrosshairWrapper extends StatefulWidget {
+class GlobalCrosshairWrapper extends ConsumerStatefulWidget {
   final Widget child;
   const GlobalCrosshairWrapper({super.key, required this.child});
 
   @override
-  State<GlobalCrosshairWrapper> createState() => _GlobalCrosshairWrapperState();
+  ConsumerState<GlobalCrosshairWrapper> createState() => _GlobalCrosshairWrapperState();
 }
 
-class _GlobalCrosshairWrapperState extends State<GlobalCrosshairWrapper> {
+class _GlobalCrosshairWrapperState extends ConsumerState<GlobalCrosshairWrapper> {
   Offset _cursorPosition = Offset.zero;
   bool _isShooting = false;
   bool _isHovering = false;
@@ -35,9 +37,13 @@ class _GlobalCrosshairWrapperState extends State<GlobalCrosshairWrapper> {
       onHover: _updatePosition,
       onExit: (event) => setState(() => _isHovering = false),
       child: Listener(
+        behavior: HitTestBehavior.translucent,
         onPointerHover: _updatePosition,
         onPointerMove: _updatePosition,
-        onPointerDown: (event) => _setShooting(true),
+        onPointerDown: (event) {
+          _setShooting(true);
+          ref.read(gameAudioServiceProvider).shoot();
+        },
         onPointerUp: (event) => _setShooting(false),
         child: Stack(
           children: [

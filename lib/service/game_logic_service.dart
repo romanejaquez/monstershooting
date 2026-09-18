@@ -34,6 +34,7 @@ class GameLogicService {
     spawner.setScreenSize(screenWidth, screenHeight);
     spawner.startSpawning();
 
+    ref.read(gameAudioServiceProvider).playBgMusic();
     _startGameTimer(onTimeUp: onTimeUp);
   }
 
@@ -57,6 +58,7 @@ class GameLogicService {
 
     ref.read(monsterWhackamoleServiceProvider).startSpawning();
 
+    ref.read(gameAudioServiceProvider).playBgMusic();
     _startGameTimer(onTimeUp: onTimeUp);
   }
 

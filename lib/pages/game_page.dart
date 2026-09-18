@@ -30,6 +30,9 @@ class GamePageState extends ConsumerState<GamePage> {
         ref.read(countdownVisibleProvider.notifier).show();
       }
     });
+
+    // Start background music upon game starting
+    ref.read(gameAudioServiceProvider).playBgMusic();
   }
 
   /// Called by [CountDownWidget] when its Rive "onEnd" event fires.

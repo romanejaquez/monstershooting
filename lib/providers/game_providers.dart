@@ -5,6 +5,8 @@ import 'package:monstershooting/service/game_logic_service.dart';
 import 'package:monstershooting/service/monster_spawning_service.dart';
 import 'package:monstershooting/service/monster_whackamole_service.dart';
 
+export 'package:monstershooting/providers/audio_providers.dart';
+
 // ---------------------------------------------------------------------------
 // Data models
 // ---------------------------------------------------------------------------
