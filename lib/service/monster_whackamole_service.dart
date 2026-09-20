@@ -64,7 +64,9 @@ class MonsterWhackamoleService {
     final animation = _kSpawnAnimations[_rng.nextInt(_kSpawnAnimations.length)];
     final speed = 1 + _rng.nextInt(4); // 1, 2, 3, or 4
 
-    ref.read(whackMolesProvider.notifier).updateMole(
+    ref
+        .read(whackMolesProvider.notifier)
+        .updateMole(
           index,
           MoleState(
             animation: animation,
@@ -73,7 +75,7 @@ class MonsterWhackamoleService {
             isVisible: true,
           ),
         );
-        
+
     _safetyTimers[index]?.cancel();
     _safetyTimers[index] = Timer(const Duration(seconds: 5), () {
       if (!_isRunning) return;
@@ -88,22 +90,26 @@ class MonsterWhackamoleService {
     if (state == null || !state.isVisible || state.shoot) return;
 
     // Trigger the shot animation by setting shoot = true
-    ref.read(whackMolesProvider.notifier).updateMole(
-          index,
-          state.copyWith(shoot: true),
-        );
+    ref
+        .read(whackMolesProvider.notifier)
+        .updateMole(index, state.copyWith(shoot: true));
   }
 
   void onShotAnimationFinished(int index) {
     if (!_isRunning) return;
 
+    final state = ref.read(whackMolesProvider)[index];
+    if (state == null || !state.isVisible || !state.shoot) return;
+
     _safetyTimers[index]?.cancel();
 
     // Collect score when shot animation finishes
     ref.read(gameScoreProvider.notifier).addGameScore(100);
-    
+
     // Hide the mole and prepare for re-spawning
-    ref.read(whackMolesProvider.notifier).updateMole(
+    ref
+        .read(whackMolesProvider.notifier)
+        .updateMole(
           index,
           const MoleState(
             animation: MonsterAnimations.none,
@@ -116,11 +122,16 @@ class MonsterWhackamoleService {
 
   void onMonsterMissed(int index) {
     if (!_isRunning) return;
-    
+
+    final state = ref.read(whackMolesProvider)[index];
+    if (state == null || !state.isVisible || state.shoot) return;
+
     _safetyTimers[index]?.cancel();
-    
+
     // The monster went back inside the hole
-    ref.read(whackMolesProvider.notifier).updateMole(
+    ref
+        .read(whackMolesProvider.notifier)
+        .updateMole(
           index,
           const MoleState(
             animation: MonsterAnimations.none,

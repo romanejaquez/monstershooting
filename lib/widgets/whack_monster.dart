@@ -33,6 +33,8 @@ class _WhackMonsterWidgetState extends State<WhackMonsterWidget> {
   RiveWidgetController? _controller;
   ViewModelInstance? _instance;
   bool _isLoaded = false;
+  bool _shotConsumed = false;
+  bool _resetConsumed = false;
 
   @override
   void initState() {
@@ -62,9 +64,17 @@ class _WhackMonsterWidgetState extends State<WhackMonsterWidget> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
         if (event.name == 'shot') {
-          widget.onShot();
+          if (!_shotConsumed && widget.shoot) {
+            _shotConsumed = true;
+            widget.onShot();
+          }
         } else if (event.name == 'reset') {
-          widget.onReset();
+          if (!_resetConsumed &&
+              !widget.shoot &&
+              widget.monsterAnimation != MonsterAnimations.none) {
+            _resetConsumed = true;
+            widget.onReset();
+          }
         }
       });
     });
@@ -87,8 +97,11 @@ class _WhackMonsterWidgetState extends State<WhackMonsterWidget> {
     if (oldWidget == null) {
       // First load
       if (!widget.shoot && widget.monsterAnimation != MonsterAnimations.none) {
+        _shotConsumed = false;
+        _resetConsumed = false;
         _instance!.trigger('show${widget.showSpeed}')!.trigger();
       } else if (widget.shoot) {
+        _shotConsumed = false;
         _instance!.trigger('shoot')!.trigger();
       }
     } else {
@@ -96,9 +109,12 @@ class _WhackMonsterWidgetState extends State<WhackMonsterWidget> {
       if (widget.monsterAnimation != MonsterAnimations.none &&
           oldWidget.monsterAnimation == MonsterAnimations.none) {
         // A new monster appeared
+        _shotConsumed = false;
+        _resetConsumed = false;
         _instance!.trigger('show${widget.showSpeed}')!.trigger();
       } else if (widget.shoot && !oldWidget.shoot) {
         // The monster was shot
+        _shotConsumed = false;
         _instance!.trigger('shoot')!.trigger();
       }
     }

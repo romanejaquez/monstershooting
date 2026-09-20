@@ -67,15 +67,14 @@ class GameLogicService {
   void _startTargetRotation() {
     _cancelTargetRotation();
     _pickNextTarget();
-    _targetTimer = Timer.periodic(const Duration(seconds: 5), (_) {
+    _targetTimer = Timer.periodic(const Duration(seconds: 4), (_) {
       _pickNextTarget();
     });
   }
 
   void _pickNextTarget() {
     final currentTarget = ref.read(currentTargetMonsterProvider);
-    final candidates =
-        _kTargetColors.where((c) => c != currentTarget).toList();
+    final candidates = _kTargetColors.where((c) => c != currentTarget).toList();
     final next = candidates[_rng.nextInt(candidates.length)];
     ref.read(currentTargetMonsterProvider.notifier).setTarget(next);
   }
@@ -88,9 +87,7 @@ class GameLogicService {
 
   // ── Whack mode ────────────────────────────────────────────────────────────
 
-  void startWhackMode({
-    required void Function() onTimeUp,
-  }) {
+  void startWhackMode({required void Function() onTimeUp}) {
     ref.read(gameScoreProvider.notifier).resetGameScore();
     ref.read(gameTimerProvider.notifier).reset();
     ref.read(gameInProgressProvider.notifier).setGameInProgress(true);
